@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Enable MPEG-4 Chapter Text Track' target in the 'Enable MPEG-4 Chapter Text Track' project.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
