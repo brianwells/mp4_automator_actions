@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Add MPEG-4 Metadata Tags' target in the 'Add MPEG-4 Metadata Tags' project.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
