@@ -1,0 +1,64 @@
+MP4 Automator Actions v1.0
+
+MP4 Automator Actions is a collection of Automator actions for 
+processing MPEG-4 files which conform to the ISO 14496 standard. 
+
+- Add MPEG-4 Metadata Tags
+
+Fills in metadata for the specified MPEG-4 files. Variables provided 
+for adding an index or total to any text field.
+
+- Edit MPEG-4 Metadata Tags
+
+Presents a window for uthe ser to edit metadata for the specified 
+MPEG-4 files.
+
+- Enable MPEG-4 Chapter Text Track
+
+Enables any existing chapter text track in the specified MPEG-4 files. 
+Also converts chapter text tracks to the selected format, which could 
+be the QuickTime and/or Nero formats.
+
+- Optimize MPEG-4 Files
+
+Rewrites the specified MPEG-4 files by moving the track samples to 
+the end of the file and interleaving them as appropriate. This also 
+results in the elimination of any free blocks and unused media blocks.
+
+This software requires Mac OS X v10.6 (Snow Leopard) or a later version.
+
+You can contact the author by email at <spam_brian@me.com> or you can 
+view the GitHub repository for MP4 Automator Actions.
+
+<https://github.com/brianwells/mp4_automator_actions>
+
+
+These Automator actions create and modify MPEG-4 files by means of the 
+MP4v2 library, which can be found at <http://code.google.com/p/mp4v2/>.
+
+
+Copyright (C) 2011 Brian D. Wells
+
+MP4 Automator Actions is free software: you can redistribute it 
+and/or modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation, either version 3 of
+the License, or (at your option) any later version.
+
+MP4 Automator Actions is distributed in the hope that it will be 
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with MP4 Automator Actions.  If not, see <http://www.gnu.org/licenses/>.
+
+Additional permission under GNU GPL version 3 section 7
+
+If you modify MP4 Automator Actions, or any covered work, by linking 
+or combining it with MP4v2 (or a modified version of that library), 
+containing parts covered by the terms of Mozilla Public License 1.1, 
+the licensors of MP4 Automator Actions grant you additional permission 
+to convey the resulting work. Corresponding Source for a non-source 
+form of such a combination shall include the source code for the parts 
+of MP4v2 used as well as that of the covered work.
+
