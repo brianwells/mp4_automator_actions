@@ -1,0 +1,100 @@
+Bundling MP4v2 Library in Automator Actions
+
+This brief document describes how to build the MP4v2 Library on Mac OS X and bundle a copy of the binary inside an Automator action.
+
+Building mp4v2
+--------------
+
+Run these commands in the Terminal application to fetch and build the latest revision.
+
+cd mp4_automator_actions
+svn checkout http://mp4v2.googlecode.com/svn/trunk mp4v2
+
+cd mp4v2
+cat > makefile_patch.diff
+Index: GNUmakefile.am
+===================================================================
+--- GNUmakefile.am	(revision 452)
++++ GNUmakefile.am	(working copy)
+@@ -151,8 +151,6 @@
+     libplatform/platform_posix.h         \
+     libplatform/platform_win32.h         \
+     libplatform/process/process.h        \
+-    libplatform/prog/option.cpp          \
+-    libplatform/prog/option.h            \
+     libplatform/sys/error.cpp            \
+     libplatform/sys/error.h              \
+     libplatform/time/time.cpp            \
+@@ -178,6 +176,8 @@
+ 
+ if ADD_UTIL
+     libmp4v2_la_SOURCES += \
++    libplatform/prog/option.cpp          \
++    libplatform/prog/option.h            \
+         libutil/Database.cpp       \
+         libutil/Database.h         \
+         libutil/Timecode.cpp       \
+
+Press control-D.
+
+patch -p0 < makefile_patch.diff
+autoreconf -f -i -v
+./configure --disable-util --disable-debug --disable-gch --enable-ub=i386,x86_64
+make
+
+As an administrator...
+
+sudo make install
+sudo make install-man
+
+Bundling mp4v2
+--------------
+
+Information that proved helpful in figuring out how to bundle a C library inside an Automator action was found at these locations:
+
+http://goto11.net/how-to-bundle-a-c-library-with-a-cocoa-application/
+http://lists.apple.com/archives/cocoa-dev/2009/Nov/msg00386.html
+http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/DynamicLibraries/100-Articles/RunpathDependentLibraries.html
+
+These step-by-step instructions are for Xcode 3.2.5 and may need updated for Xcode 4.
+
+STEP 1: Copy and link to installed mp4v2
+
+Control-click the project's Linked Frameworks group (under Frameworks and Libraries) and choose Add Files > Existing Files (not Frameworks) from the contextual menu. Press Command-Shift-G, enter the path /usr/local/lib and click Go. Select libmp4v2.2.dylib and click Add.
+
+Be sure to select "Copy items into destination group's folder (if needed)" when prompted and then click Add.
+
+STEP 2: Include copy of mp4v2 inside action
+
+Control-click the project's target and choose Add > New Build Phase > New Copy Files Build Phase. Choose Frameworks from the Destination popup menu and then close the Info window. Control-click the Copy Files build phase and rename it to Copy Frameworks.
+
+Drag libmp4v2.2.dylib from the Linked Frameworks group to the Copy Frameworks build phase.
+
+STEP 3: Make copy of mp4v2 library run-path dependent
+
+Open the Terminal (/Applications/Utilities) and change the working directory to the project folder.
+
+cd /path/to/the/project/folder
+
+Adjust the copy of libmp4v2.2.dylib to be run-path dependent.
+
+install_name_tool -id @rpath/libmp4v2.2.dylib libmp4v2.2.dylib
+
+STEP 4: Configure Automator action to use run-path libraries
+
+Choose Project > Edit Project Settings. Select the Build tab to view the build settings. Find the Runpath Search Paths setting and add the following value:
+
+@loader_path/../Frameworks
+
+STEP 5: Include header files for mp4v2 library
+
+Choose Project > Edit Project Settings. Select the Build tab to view the build settings. Find the Header Search Paths setting and add the following value:
+
+/usr/local/include
+
+Edit the action class header file to include the following:
+
+#include <mp4v2/mp4v2.h>
+
+
+
