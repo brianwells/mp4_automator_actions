@@ -2,4 +2,5 @@ mp4v2
 build
 *.mode*
 *.pbxuser
+libmp4v2.2.dylib
 
