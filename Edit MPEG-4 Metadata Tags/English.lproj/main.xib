@@ -11,7 +11,7 @@
 			<string key="com.apple.imagekit.ibplugin">1.1</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="100028"/>
+			<integer value="100011"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.imagekit.ibplugin</string>
@@ -1927,6 +1927,27 @@
 												<reference key="NSContentView" ref="342699628"/>
 												<bytes key="NSScrollAmts">QSAAAEEgAABCyGZmQqoAAA</bytes>
 											</object>
+											<object class="NSSlider" id="255960867">
+												<reference key="NSNextResponder" ref="133043989"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{484, 19}, {82, 21}}</string>
+												<reference key="NSSuperview" ref="133043989"/>
+												<bool key="NSEnabled">YES</bool>
+												<object class="NSSliderCell" key="NSCell" id="717684488">
+													<int key="NSCellFlags">-2079981824</int>
+													<int key="NSCellFlags2">0</int>
+													<string key="NSContents"/>
+													<reference key="NSControlView" ref="255960867"/>
+													<double key="NSMaxValue">24</double>
+													<double key="NSMinValue">0.0</double>
+													<double key="NSValue">0.5</double>
+													<double key="NSAltIncValue">0.0</double>
+													<int key="NSNumberOfTickMarks">0</int>
+													<int key="NSTickMarkPosition">1</int>
+													<bool key="NSAllowsTickMarkValuesOnly">NO</bool>
+													<bool key="NSVertical">NO</bool>
+												</object>
+											</object>
 										</array>
 										<string key="NSFrame">{{10, 25}, {574, 116}}</string>
 									</object>
@@ -3380,7 +3401,7 @@
 						<string key="label">selectionIndexes: selectionIndexes</string>
 						<reference key="source" ref="439475237"/>
 						<reference key="destination" ref="633201870"/>
-						<object class="NSNibBindingConnector" key="connector">
+						<object class="NSNibBindingConnector" key="connector" id="1022">
 							<reference key="NSSource" ref="439475237"/>
 							<reference key="NSDestination" ref="633201870"/>
 							<string key="NSLabel">selectionIndexes: selectionIndexes</string>
@@ -3492,6 +3513,55 @@
 					</object>
 					<int key="connectionID">100503</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">dragDestinationDelegate</string>
+						<reference key="source" ref="439475237"/>
+						<reference key="destination" ref="633201870"/>
+					</object>
+					<int key="connectionID">100504</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">filesController</string>
+						<reference key="source" ref="633201870"/>
+						<reference key="destination" ref="344171234"/>
+					</object>
+					<int key="connectionID">100505</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: imageZoom</string>
+						<reference key="source" ref="255960867"/>
+						<reference key="destination" ref="513649446"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="255960867"/>
+							<reference key="NSDestination" ref="513649446"/>
+							<string key="NSLabel">value: imageZoom</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">imageZoom</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">100510</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">zoomValue: imageZoom</string>
+						<reference key="source" ref="439475237"/>
+						<reference key="destination" ref="513649446"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="439475237"/>
+							<reference key="NSDestination" ref="513649446"/>
+							<string key="NSLabel">zoomValue: imageZoom</string>
+							<string key="NSBinding">zoomValue</string>
+							<string key="NSKeyPath">imageZoom</string>
+							<reference key="NSPreviousConnector" ref="1022"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">100513</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -3567,10 +3637,10 @@
 							<reference ref="146917563"/>
 							<reference ref="950187289"/>
 							<reference ref="734136997"/>
-							<reference ref="257297379"/>
 							<reference ref="224276804"/>
 							<reference ref="920760853"/>
 							<reference ref="213818273"/>
+							<reference ref="257297379"/>
 						</array>
 						<reference key="parent" ref="726925315"/>
 					</object>
@@ -4736,6 +4806,7 @@
 							<reference ref="778077521"/>
 							<reference ref="890251951"/>
 							<reference ref="415051197"/>
+							<reference ref="255960867"/>
 						</array>
 						<reference key="parent" ref="913583335"/>
 					</object>
@@ -4976,6 +5047,19 @@
 						<reference key="object" ref="805249839"/>
 						<reference key="parent" ref="59621273"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100506</int>
+						<reference key="object" ref="255960867"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="717684488"/>
+						</array>
+						<reference key="parent" ref="133043989"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100507</int>
+						<reference key="object" ref="717684488"/>
+						<reference key="parent" ref="255960867"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -5020,7 +5104,7 @@
 				</object>
 				<string key="100020.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSAffineTransform" key="100020.IBViewBoundsToFrameTransform">
-					<bytes key="NSTransformStruct">P4AAAL+AAABBUAAAw6EAAA</bytes>
+					<bytes key="NSTransformStruct">P4AAAL+AAABBUAAAw0IAAA</bytes>
 				</object>
 				<string key="100026.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="100027.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5423,6 +5507,11 @@
 				<string key="100279.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="100301.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="100324.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="100506.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSAffineTransform" key="100506.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAABD8gAAwiwAAA</bytes>
+				</object>
+				<string key="100507.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="5.IBEditorWindowLastContentRect">{{459, 616}, {400, 85}}</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<integer value="1" key="5.ImportedFromIB2"/>
@@ -5436,7 +5525,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">100503</int>
+			<int key="maxID">100513</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6131,6 +6220,22 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSScroller.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSSlider</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSSlider.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSSliderCell</string>
+					<string key="superclassName">NSActionCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSSliderCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

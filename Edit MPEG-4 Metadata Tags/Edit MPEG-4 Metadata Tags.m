@@ -118,6 +118,8 @@ static inline BOOL isEmpty(id thing) {
 
 @implementation Edit_MPEG_4_Metadata_Tags
 
+@synthesize imageZoom;
+
 + (void)initialize {
     ImageDataTransformer *transformer = [[[ImageDataTransformer alloc] init] autorelease];
     [NSValueTransformer setValueTransformer:transformer forName:@"ImageDataTransformer"];
@@ -272,6 +274,9 @@ static inline BOOL isEmpty(id thing) {
 	if (results == nil)
 		results = [[NSMutableDictionary dictionaryWithCapacity:3] retain];
 	
+	// set initial zoom level
+	self.imageZoom = [NSNumber numberWithFloat:1.22];
+
 	[super opened];
 }
 
@@ -789,6 +794,8 @@ static inline BOOL isEmpty(id thing) {
 	[[self managedObjectContext] reset];
 	// default tab selection
 	[tabView selectFirstTabViewItem:self];
+	// reset  zoom level
+	self.imageZoom = [NSNumber numberWithFloat:1.22];
 }
 
 - (id)output

@@ -56,10 +56,13 @@
 	NSMutableArray *artworkImages;
     NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
+    NSNumber *imageZoom;
 	NSArray *genreList;
 	NSArray *kindList;
 	NSArray *ratingList;
 }
+
+@property (copy) NSNumber *imageZoom;
 
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;
