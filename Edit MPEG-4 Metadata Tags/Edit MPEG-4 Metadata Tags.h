@@ -56,6 +56,9 @@
 	NSMutableArray *artworkImages;
     NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
+	NSArray *genreList;
+	NSArray *kindList;
+	NSArray *ratingList;
 }
 
 - (NSManagedObjectModel *)managedObjectModel;

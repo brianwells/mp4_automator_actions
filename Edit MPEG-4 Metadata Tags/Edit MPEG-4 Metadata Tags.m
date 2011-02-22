@@ -129,7 +129,8 @@ static inline BOOL isEmpty(id thing) {
 	// can be called multiple times by Automator
 
 	// populate menus
-	[genreController setContent:[NSArray arrayWithObjects:
+	if (genreList == nil) {
+		genreList = [[NSArray arrayWithObjects:
 								 menu_int(@"None",				 0),
 								 
 								 // iTunes genres
@@ -243,9 +244,11 @@ static inline BOOL isEmpty(id thing) {
 	 menu_int(@"Rock & Roll",		79),
 	 menu_int(@"Hard Rock",			80),
 	 */
-								 nil]];
-	
-	[mediaKindController setContent:[NSArray arrayWithObjects:
+								 nil] retain];
+	}
+
+	if (kindList == nil) {
+		kindList = [[NSArray arrayWithObjects:
 									 menu_int(@"None",				 0),
 									 menu_int(@"Music",				 1),
 									 menu_int(@"Audiobook",			 2),
@@ -256,12 +259,15 @@ static inline BOOL isEmpty(id thing) {
 									 menu_int(@"TV Show",			10),
 									 menu_int(@"Booklet",			11),
 									 menu_int(@"Ringtone",			14),
-									 nil]];
-	[contentRatingController setContent:[NSArray arrayWithObjects:
+									 nil] retain];
+	}
+	if (ratingList == nil) {
+		ratingList = [[NSArray arrayWithObjects:
 										 menu_int(@"None",			 0),
 										 menu_int(@"Clean",			 2),
 										 menu_int(@"Explicit",		 4),
-										 nil]];
+										 nil] retain];
+	}
 
 	if (results == nil)
 		results = [[NSMutableDictionary dictionaryWithCapacity:3] retain];
@@ -479,6 +485,9 @@ static inline BOOL isEmpty(id thing) {
     }
 	
 	// show user interface
+	[genreController setContent:genreList];
+	[mediaKindController setContent:kindList];
+	[contentRatingController setContent:ratingList];
 	[tagsWindow makeKeyAndOrderFront:self];
 }
 
@@ -797,6 +806,12 @@ static inline BOOL isEmpty(id thing) {
 	managedObjectContext = nil;
 	[persistentStoreCoordinator release];
 	persistentStoreCoordinator = nil;
+	[genreList release];
+	genreList = nil;
+	[kindList release];
+	kindList = nil;
+	[ratingList release];
+	ratingList = nil;
 }
 
 - (IBAction) addArtworkImage:(id)sender
