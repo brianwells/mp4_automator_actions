@@ -39,6 +39,7 @@
 
 @interface AlbumArt : NSManagedObject <NSPasteboardWriting> {
 	NSUInteger imageVersion;
+	NSString *imageTitle;
 }
 
 @property NSUInteger imageVersion;

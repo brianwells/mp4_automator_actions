@@ -1877,7 +1877,7 @@
 																<string key="NSFrameSize">{466, 98}</string>
 																<reference key="NSSuperview" ref="342699628"/>
 																<bool key="constrainsToOriginalSize">NO</bool>
-																<bool key="cellsHaveSubtitle">NO</bool>
+																<bool key="cellsHaveSubtitle">YES</bool>
 																<bool key="cellsHaveTitle">NO</bool>
 																<bool key="outlinesCells">NO</bool>
 																<bool key="shadowsCells">YES</bool>

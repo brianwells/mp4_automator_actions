@@ -41,6 +41,13 @@
 @synthesize imageVersion;
 @dynamic primitiveImageRepresentation;
 
+- (void) dealloc
+{
+    [imageTitle release];
+	imageTitle = nil;
+    [super dealloc];
+}
+
 - (void)setImageRepresentation:(NSData *)data {
 	[self willChangeValueForKey:@"imageRepresentation"];
 	[self setPrimitiveImageRepresentation:data];
@@ -54,6 +61,40 @@
 
 - (NSString *)imageUID {
 	return [[[self objectID] URIRepresentation] description];
+}
+
+- (NSString *)imageSubtitle {
+	if (!imageTitle) {
+		NSUInteger artwork_type = [[self valueForKey:@"imageType"] unsignedIntegerValue];
+		NSString *imageType;
+		switch (artwork_type) {
+			case MP4_ART_JPEG:
+				imageType = @"JPEG";
+				break;
+			case MP4_ART_PNG:
+				imageType = @"PNG";
+				break;
+			case MP4_ART_BMP:
+				imageType = @"BMP";
+				break;
+			case MP4_ART_GIF:
+				imageType = @"GIF";
+				break;
+			default:
+				imageType = @"Image";
+				break;
+		}
+		// get image size
+		NSData *imageData = [self valueForKey:@"imageRepresentation"];
+		NSImage *image = [[NSImage alloc] initWithData:imageData];
+		if (image) {
+			NSSize imageSize = [image size];
+			imageTitle = [NSString stringWithFormat:@"%@ (%.0f x %.0f)",imageType,imageSize.width,imageSize.height];
+		} else {
+			imageTitle = [NSString stringWithString:imageType];
+		}
+	}
+	return imageTitle;
 }
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
