@@ -5491,7 +5491,7 @@
 						<string key="contentRatingController">NSArrayController</string>
 						<string key="filesController">NSArrayController</string>
 						<string key="genreController">NSArrayController</string>
-						<string key="imagesController">NSArrayController</string>
+						<string key="imagesController">ImagesArrayController</string>
 						<string key="lyricsView">NSTextView</string>
 						<string key="mediaKindController">NSArrayController</string>
 						<string key="tabView">NSTabView</string>
@@ -5516,7 +5516,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="imagesController">
 							<string key="name">imagesController</string>
-							<string key="candidateClassName">NSArrayController</string>
+							<string key="candidateClassName">ImagesArrayController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="lyricsView">
 							<string key="name">lyricsView</string>
@@ -5543,17 +5543,20 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">ImagesArrayController</string>
 					<string key="superclassName">NSArrayController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">imageView</string>
-						<string key="NS.object.0">IKImageBrowserView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">imageView</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="filesController">NSArrayController</string>
+						<string key="imageView">IKImageBrowserView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="filesController">
+							<string key="name">filesController</string>
+							<string key="candidateClassName">NSArrayController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="imageView">
 							<string key="name">imageView</string>
 							<string key="candidateClassName">IKImageBrowserView</string>
 						</object>
-					</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">ImagesArrayController.h</string>

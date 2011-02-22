@@ -39,6 +39,7 @@
 #include <dispatch/dispatch.h>
 #include <mp4v2/mp4v2.h>
 #import "ImageDataTransformer.h"
+#import "ImagesArrayController.h"
 
 @interface Edit_MPEG_4_Metadata_Tags : AMBundleAction 
 {
@@ -46,7 +47,7 @@
     IBOutlet NSArrayController *genreController;
     IBOutlet NSArrayController *mediaKindController;
     IBOutlet NSArrayController *contentRatingController;
-    IBOutlet NSArrayController *imagesController;
+    IBOutlet ImagesArrayController *imagesController;
     IBOutlet NSArrayController *filesController;
 	IBOutlet IKImageBrowserView *artworkBrowser;
 	IBOutlet NSTextView *lyricsView;

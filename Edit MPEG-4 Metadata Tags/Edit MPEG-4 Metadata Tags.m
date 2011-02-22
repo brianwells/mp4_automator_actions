@@ -813,79 +813,13 @@ static inline BOOL isEmpty(id thing) {
 									nil]];
 	[openPanel beginSheetModalForWindow:[artworkBrowser window] completionHandler:^(NSInteger result) {
         if (result) {
-			NSManagedObject *imageObject;
-			NSData *fileData;
-			NSImage *fileImage = nil;
-			NSError *error = nil;
-			for (NSURL *fileURL in [openPanel URLs]) {
-				fileData = [NSData dataWithContentsOfURL:fileURL
-												 options:NSDataReadingUncached 
-												   error:&error];
-				if (!error) {
-					// pre-flight image
-					fileImage = [[NSImage alloc] initWithData:fileData];
-					if (!fileImage) {
-						error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadCorruptFileError userInfo:nil];
-					}
-				}
-				if (error) {
-					// complain about any error reading the file
-					NSAlert *alert = [[NSAlert alloc] init];
-					[alert addButtonWithTitle:@"Continue"];
-					[alert setMessageText:[NSString stringWithFormat:@"Unable to read file \"%@\".",[fileURL lastPathComponent]]];
-					[alert setInformativeText:[error localizedDescription]];
-					[alert setAlertStyle:NSCriticalAlertStyle];
-					[alert runModal];
-					[alert release];
-				} else {
-					// get type
-					NSUInteger artwork_type = MP4_ART_UNDEFINED;
-					CFStringRef uti = NULL;
-					LSItemInfoRecord file_info;
-					if (LSCopyItemInfoForURL((CFURLRef)fileURL, kLSRequestExtension | kLSRequestTypeCreator, &file_info) == noErr) {
-						if (file_info.extension != NULL) {
-							uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-																		file_info.extension,
-																		kUTTypeData);
-							CFRelease(file_info.extension);
-						}
-						if (uti == NULL) {
-							CFStringRef type_str = UTCreateStringForOSType(file_info.filetype);
-							if (type_str != NULL) {
-								uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassOSType,
-																			type_str, 
-																			kUTTypeData);
-								CFRelease(type_str);
-							}
-						}
-						
-						if (UTTypeConformsTo(uti, CFSTR("public.jpeg"))) {
-							artwork_type = MP4_ART_JPEG;
-						} else if (UTTypeConformsTo(uti, CFSTR("public.png"))) {
-							artwork_type = MP4_ART_PNG;
-						} else if (UTTypeConformsTo(uti, CFSTR("com.microsoft.bmp"))) {
-							artwork_type = MP4_ART_BMP;
-						} else if (UTTypeConformsTo(uti, CFSTR("com.compuserve.gif"))) {
-							artwork_type = MP4_ART_GIF;
-						} else {
-						}
-						if (uti != NULL) {
-							CFRelease(uti);
-							uti = NULL;
-						}
-					}
-					imageObject = [NSEntityDescription insertNewObjectForEntityForName:@"AlbumArt"
-																inManagedObjectContext:[self managedObjectContext]];
-					[imageObject setValue:[NSNumber numberWithUnsignedInteger:NSUIntegerMax] forKey:@"imageIndex"];
-					[imageObject setValue:[NSNumber numberWithUnsignedInteger:artwork_type] forKey:@"imageType"];
-					[imageObject setValue:fileData forKey:@"imageRepresentation"];
-					[imageObject setValue:[[filesController selectedObjects] lastObject] forKey:@"mpegFile"];
-				}
-				if (fileImage)
-					[fileImage release];
-				fileImage = nil;
+			NSArray *files = [openPanel URLs];
+			for (NSURL *fileURL in files) {
+				[imagesController addArtworkFromURL:fileURL index:NSUIntegerMax];
 			}
 			[artworkBrowser reloadData];
+			NSRange selection = NSMakeRange([[imagesController arrangedObjects] count] - [files count], [files count]);
+			[imagesController setSelectionIndexes:[NSIndexSet indexSetWithIndexesInRange:selection]];
         }
     }];
 

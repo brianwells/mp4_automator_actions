@@ -39,8 +39,14 @@
 
 @interface ImagesArrayController : NSArrayController {
 	IBOutlet IKImageBrowserView *imageView;
+    IBOutlet NSArrayController *filesController;
+	NSIndexSet *droppedIndexes;
 }
 
+@property (retain) NSIndexSet* droppedIndexes;
+
 - (NSUInteger)imageBrowser:(IKImageBrowserView *) aBrowser writeItemsAtIndexes:(NSIndexSet *) itemIndexes toPasteboard:(NSPasteboard *)pasteboard;
+
+- (void) addArtworkFromURL:(NSURL *)fileURL index:(NSUInteger)index;
 
 @end

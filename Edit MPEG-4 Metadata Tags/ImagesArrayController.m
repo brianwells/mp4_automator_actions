@@ -38,8 +38,11 @@
 
 @implementation ImagesArrayController
 
+@synthesize droppedIndexes;
+
 - (void)awakeFromNib {
 	[super awakeFromNib];
+	self.droppedIndexes = [NSIndexSet indexSet];
 	[self addObserver:self
 		   forKeyPath:@"arrangedObjects.imageRepresentation"
 			  options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
@@ -48,6 +51,13 @@
 		   forKeyPath:@"arrangedObjects"
 			  options:NSKeyValueObservingOptionNew
 			  context:nil];
+	[imageView registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
+}
+
+- (void) dealloc
+{
+    self.droppedIndexes = nil;
+    [super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -105,5 +115,137 @@
 	return [itemIndexes count];
 }
 
+- (NSDragOperation)draggingEntered:(id < NSDraggingInfo >)sender
+{
+    NSPasteboard *pboard = [sender draggingPasteboard];
+	self.droppedIndexes = [NSIndexSet indexSet];
+
+	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] != nil) {
+		return NSDragOperationEvery;
+	}
+
+	return NSDragOperationNone;
+}
+
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
+{
+	return NSDragOperationCopy;
+}
+
+- (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
+{
+	return YES;
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	NSUInteger location = [imageView indexAtLocationOfDroppedItem];
+	NSUInteger count = 0;
+	for (id file in [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType]) {
+		NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:file];
+		[self addArtworkFromURL:fileURL index:location + count];
+		[fileURL release];
+		fileURL = nil;
+		count++;
+	}
+	self.droppedIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(location, count)];
+	return YES;
+}
+
+- (void)concludeDragOperation:(id < NSDraggingInfo >)sender
+{
+	[imageView reloadData];
+	[self setSelectionIndexes:self.droppedIndexes];
+}
+
+
+- (void) addArtworkFromURL:(NSURL *)fileURL index:(NSUInteger)index
+{
+	NSManagedObject *imageObject;
+	NSData *fileData;
+	NSImage *fileImage = nil;
+	NSError *error = nil;
+
+	fileData = [NSData dataWithContentsOfURL:fileURL
+									 options:NSDataReadingUncached
+									   error:&error];
+	if (!error) {
+		// pre-flight image
+		fileImage = [[NSImage alloc] initWithData:fileData];
+		if (!fileImage) {
+			error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadCorruptFileError userInfo:nil];
+		}
+	}
+	if (error) {
+		// complain about any error reading the file
+		NSAlert *alert = [[NSAlert alloc] init];
+		[alert addButtonWithTitle:@"Continue"];
+		[alert setMessageText:[NSString stringWithFormat:@"Unable to read file \"%@\".",[fileURL lastPathComponent]]];
+		[alert setInformativeText:[error localizedDescription]];
+		[alert setAlertStyle:NSCriticalAlertStyle];
+		[alert runModal];
+		[alert release];
+	} else {
+		// get type
+		NSUInteger artwork_type = MP4_ART_UNDEFINED;
+		CFStringRef uti = NULL;
+		LSItemInfoRecord file_info;
+		if (LSCopyItemInfoForURL((CFURLRef)fileURL, kLSRequestExtension | kLSRequestTypeCreator, &file_info) == noErr) {
+			if (file_info.extension != NULL) {
+				uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+															file_info.extension,
+															kUTTypeData);
+				CFRelease(file_info.extension);
+			}
+			if (uti == NULL) {
+				CFStringRef type_str = UTCreateStringForOSType(file_info.filetype);
+				if (type_str != NULL) {
+					uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassOSType,
+																type_str, 
+																kUTTypeData);
+					CFRelease(type_str);
+				}
+			}
+
+			if (UTTypeConformsTo(uti, CFSTR("public.jpeg"))) {
+				artwork_type = MP4_ART_JPEG;
+			} else if (UTTypeConformsTo(uti, CFSTR("public.png"))) {
+				artwork_type = MP4_ART_PNG;
+			} else if (UTTypeConformsTo(uti, CFSTR("com.microsoft.bmp"))) {
+				artwork_type = MP4_ART_BMP;
+			} else if (UTTypeConformsTo(uti, CFSTR("com.compuserve.gif"))) {
+				artwork_type = MP4_ART_GIF;
+			} else {
+				// should do something sane here if unknown image?
+			}
+			if (uti != NULL) {
+				CFRelease(uti);
+				uti = NULL;
+			}
+		}
+
+		// bump existing images
+		if (index != NSUIntegerMax) {
+			for (NSManagedObject *item in [self arrangedObjects]) {
+				NSUInteger position = [[item valueForKey:@"imageIndex"] unsignedIntegerValue];
+				if (position >= index) {
+					[item setValue:[NSNumber numberWithUnsignedInteger:position + 1] forKey:@"imageIndex"];
+				}
+			}
+		}
+
+		// add new image
+		imageObject = [NSEntityDescription insertNewObjectForEntityForName:@"AlbumArt"
+													inManagedObjectContext:[self managedObjectContext]];
+		[imageObject setValue:[NSNumber numberWithUnsignedInteger:index] forKey:@"imageIndex"];
+		[imageObject setValue:[NSNumber numberWithUnsignedInteger:artwork_type] forKey:@"imageType"];
+		[imageObject setValue:fileData forKey:@"imageRepresentation"];
+		[imageObject setValue:[[filesController selectedObjects] lastObject] forKey:@"mpegFile"];
+
+	}
+	if (fileImage)
+		[fileImage release];
+	fileImage = nil;
+}
 
 @end
