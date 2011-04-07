@@ -3,4 +3,4 @@ build
 *.mode*
 *.pbxuser
 libmp4v2.2.dylib
-
+xcuserdata
