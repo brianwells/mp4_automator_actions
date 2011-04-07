@@ -90,6 +90,7 @@
 		if (image) {
 			NSSize imageSize = [image size];
 			imageTitle = [NSString stringWithFormat:@"%@ (%.0f x %.0f)",imageType,imageSize.width,imageSize.height];
+            [image release];
 		} else {
 			imageTitle = [NSString stringWithString:imageType];
 		}
