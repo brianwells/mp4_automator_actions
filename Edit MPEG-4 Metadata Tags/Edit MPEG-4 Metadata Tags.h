@@ -40,18 +40,27 @@
 #include <mp4v2/mp4v2.h>
 #import "ImageDataTransformer.h"
 #import "ImagesArrayController.h"
+#import "TextSnippet.h"
+#import "TokenStringTransformer.h"
 
-@interface Edit_MPEG_4_Metadata_Tags : AMBundleAction 
+// indicate that AMBundleAction implements NSTokenFieldDelegate protocol
+@interface AMBundleAction (TokenFields) <NSTokenFieldDelegate>
+@end
+
+@interface Edit_MPEG_4_Metadata_Tags : AMBundleAction < NSTokenFieldDelegate >
 {
 	IBOutlet NSWindow *tagsWindow;
     IBOutlet NSArrayController *genreController;
     IBOutlet NSArrayController *mediaKindController;
     IBOutlet NSArrayController *contentRatingController;
+    IBOutlet NSArrayController *snippetsController;
     IBOutlet ImagesArrayController *imagesController;
     IBOutlet NSArrayController *filesController;
 	IBOutlet IKImageBrowserView *artworkBrowser;
 	IBOutlet NSTextView *lyricsView;
 	IBOutlet NSTabView *tabView;
+	IBOutlet NSTokenField *snippetTokenField;
+    IBOutlet NSTextField *snippetLabel;
 	NSMutableDictionary *results;
 	NSMutableArray *artworkImages;
     NSManagedObjectContext *managedObjectContext;
@@ -60,9 +69,12 @@
 	NSArray *genreList;
 	NSArray *kindList;
 	NSArray *ratingList;
+    BOOL snippetsConfigured;
+	NSArray *oldSnippets;
 }
 
 @property (copy) NSNumber *imageZoom;
+@property (copy) NSArray *oldSnippets;
 
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;
@@ -78,5 +90,8 @@
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)addArtworkImage:(id)sender;
 - (IBAction)removeArtworkImage:(id)sender;
+- (IBAction)addSnippet:(id)sender;
+
+- (void)updateSnippetsParameter;
 
 @end

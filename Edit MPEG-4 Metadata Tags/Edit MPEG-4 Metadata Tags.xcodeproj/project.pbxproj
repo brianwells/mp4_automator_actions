@@ -34,6 +34,10 @@
 		C224C41512F70D84001E70CD /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C224C41412F70D84001E70CD /* Quartz.framework */; };
 		C24EE28912F6017F00B081D4 /* ImageDataTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = C24EE28712F6017F00B081D4 /* ImageDataTransformer.h */; };
 		C24EE28A12F6017F00B081D4 /* ImageDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24EE28812F6017F00B081D4 /* ImageDataTransformer.m */; };
+		C29B3B92134CFF4300DC0A1A /* TokenStringTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = C29B3B90134CFF4300DC0A1A /* TokenStringTransformer.h */; };
+		C29B3B93134CFF4300DC0A1A /* TokenStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = C29B3B91134CFF4300DC0A1A /* TokenStringTransformer.m */; };
+		C2BDBFF41347BE4E00966C70 /* TextSnippet.h in Headers */ = {isa = PBXBuildFile; fileRef = C2BDBFF21347BE4E00966C70 /* TextSnippet.h */; };
+		C2BDBFF51347BE4E00966C70 /* TextSnippet.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BDBFF31347BE4E00966C70 /* TextSnippet.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -71,6 +75,10 @@
 		C224C41412F70D84001E70CD /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		C24EE28712F6017F00B081D4 /* ImageDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDataTransformer.h; sourceTree = "<group>"; };
 		C24EE28812F6017F00B081D4 /* ImageDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDataTransformer.m; sourceTree = "<group>"; };
+		C29B3B90134CFF4300DC0A1A /* TokenStringTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenStringTransformer.h; sourceTree = "<group>"; };
+		C29B3B91134CFF4300DC0A1A /* TokenStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TokenStringTransformer.m; sourceTree = "<group>"; };
+		C2BDBFF21347BE4E00966C70 /* TextSnippet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextSnippet.h; sourceTree = "<group>"; };
+		C2BDBFF31347BE4E00966C70 /* TextSnippet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextSnippet.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +133,10 @@
 			children = (
 				6518174F067A8D39005BD953 /* Edit MPEG-4 Metadata Tags.h */,
 				65181750067A8D39005BD953 /* Edit MPEG-4 Metadata Tags.m */,
+				C2BDBFF21347BE4E00966C70 /* TextSnippet.h */,
+				C2BDBFF31347BE4E00966C70 /* TextSnippet.m */,
+				C29B3B90134CFF4300DC0A1A /* TokenStringTransformer.h */,
+				C29B3B91134CFF4300DC0A1A /* TokenStringTransformer.m */,
 				C24EE28712F6017F00B081D4 /* ImageDataTransformer.h */,
 				C24EE28812F6017F00B081D4 /* ImageDataTransformer.m */,
 				C224C3E212F6F637001E70CD /* AlbumArt.h */,
@@ -189,6 +201,8 @@
 				C24EE28912F6017F00B081D4 /* ImageDataTransformer.h in Headers */,
 				C224C3E412F6F637001E70CD /* AlbumArt.h in Headers */,
 				C224C3F912F6FA96001E70CD /* ImagesArrayController.h in Headers */,
+				C2BDBFF41347BE4E00966C70 /* TextSnippet.h in Headers */,
+				C29B3B92134CFF4300DC0A1A /* TokenStringTransformer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +304,8 @@
 				C24EE28A12F6017F00B081D4 /* ImageDataTransformer.m in Sources */,
 				C224C3E512F6F637001E70CD /* AlbumArt.m in Sources */,
 				C224C3FA12F6FA96001E70CD /* ImagesArrayController.m in Sources */,
+				C2BDBFF51347BE4E00966C70 /* TextSnippet.m in Sources */,
+				C29B3B93134CFF4300DC0A1A /* TokenStringTransformer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -119,10 +119,13 @@ static inline BOOL isEmpty(id thing) {
 @implementation Edit_MPEG_4_Metadata_Tags
 
 @synthesize imageZoom;
+@synthesize oldSnippets;
 
 + (void)initialize {
     ImageDataTransformer *transformer = [[[ImageDataTransformer alloc] init] autorelease];
     [NSValueTransformer setValueTransformer:transformer forName:@"ImageDataTransformer"];
+    TokenStringTransformer *tokenTransformer = [[[TokenStringTransformer alloc] init] autorelease];
+    [NSValueTransformer setValueTransformer:tokenTransformer forName:@"TokenStringTransformer"];
 }
 
 //- (void)awakeFromNib
@@ -273,11 +276,86 @@ static inline BOOL isEmpty(id thing) {
 
 	if (results == nil)
 		results = [[NSMutableDictionary dictionaryWithCapacity:3] retain];
-	
-	// set initial zoom level
+
+	if (!snippetsConfigured) {
+        NSMutableArray *snippetArray = [NSMutableArray arrayWithCapacity:5];
+        NSArray *snippetParameter = [[self parameters] objectForKey:@"textSnippets"];
+        [snippetParameter enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            TextSnippet *snip = [[TextSnippet alloc] init];
+            snip.text = obj;
+            [snippetArray addObject:snip];
+            [snip release];
+        }];
+        [snippetsController setContent:snippetArray];
+        snippetArray = nil;
+        
+        // register as a listener
+        [snippetsController addObserver:self 
+                             forKeyPath:@"arrangedObjects" 
+                                options:NSKeyValueObservingOptionInitial
+                                context:nil];
+        
+        snippetsConfigured = YES;
+    }
+    
+    // set initial zoom level
 	self.imageZoom = [NSNumber numberWithFloat:1.22];
 
 	[super opened];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([oldSnippets containsObject:object] && [keyPath isEqualToString:@"text"]) {
+        [self updateSnippetsParameter];
+    } else if (object == snippetsController && [keyPath isEqualToString:@"arrangedObjects"]) {
+        NSArray *newSnippets = [snippetsController arrangedObjects];
+        NSMutableArray *onlyNew = [newSnippets mutableCopy];
+        [onlyNew removeObjectsInArray:oldSnippets];
+        [onlyNew enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [obj addObserver:self forKeyPath:@"text" options:0 context:nil];
+        }];
+        [onlyNew release];
+        NSMutableArray *onlyRemoved = [oldSnippets mutableCopy];
+        [onlyRemoved removeObjectsInArray:newSnippets];
+        [onlyRemoved enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [obj removeObserver:self forKeyPath:@"text"];
+        }];
+        [onlyRemoved release];
+        self.oldSnippets = newSnippets;
+        [self updateSnippetsParameter];
+    }
+}
+
+- (void)updateSnippetsParameter
+{
+    // update parameters with new value
+    NSMutableString *result = [NSMutableString stringWithCapacity:100];
+    [[snippetsController arrangedObjects] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [result appendFormat:@"\"%@\" ",[obj text]];
+    }];    
+    NSMutableArray *snippetArray = [NSMutableArray arrayWithCapacity:5];
+    [[snippetsController arrangedObjects] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [snippetArray addObject:[obj text]];
+    }];
+    [[self parameters] setObject:snippetArray forKey:@"textSnippets"];
+
+}
+
+- (id)initWithDefinition:(NSDictionary *)dict fromArchive:(BOOL)archived
+{
+	self = [super initWithDefinition:dict fromArchive:archived];
+	if (self != nil && !archived) {
+        // fetch default snippets
+        NSDictionary *defaults = [[[self bundle] infoDictionary] valueForKey:@"AMDefaultParameters"];
+        if (defaults != nil) {
+            NSArray *snippets = [defaults valueForKey:@"textSnippets"];
+            if (snippets != nil) {
+                [[self parameters] setValue:snippets forKey:@"textSnippets"];
+            }
+        }
+	}
+	return self;
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
@@ -490,6 +568,18 @@ static inline BOOL isEmpty(id thing) {
     }
 	
 	// show user interface
+    NSMutableArray *snippetArray = [NSMutableArray arrayWithCapacity:5];
+    NSArray *snippetParameter = [[self parameters] objectForKey:@"textSnippets"];
+    [snippetParameter enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (![obj isEqualToString:@""]) {
+            [snippetArray addObject:[NSString stringWithFormat:@"%%[%@]", obj]];
+        }
+    }];
+    [snippetTokenField setObjectValue:snippetArray];
+    [snippetTokenField setHidden:[snippetArray count] == 0];
+    [snippetLabel setHidden:[snippetArray count] == 0];
+    snippetArray = nil;
+
 	[genreController setContent:genreList];
 	[mediaKindController setContent:kindList];
 	[contentRatingController setContent:ratingList];
@@ -807,6 +897,7 @@ static inline BOOL isEmpty(id thing) {
 - (void)closed
 {
 	// clean up
+    [snippetsController removeObserver:self forKeyPath:@"arrangedObjects"];
 	[results release];
 	results = nil;
 	[managedObjectContext release];
@@ -857,6 +948,52 @@ static inline BOOL isEmpty(id thing) {
 		[imagesController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,[[imagesController arrangedObjects] count])]];
 	}
 	[artworkBrowser reloadData];
+}
+
+- (IBAction)addSnippet:(id)sender
+{
+    
+}
+
+- (id)tokenField:(NSTokenField *)_tokenField representedObjectForEditingString:(NSString *)_editingString
+{
+	return _editingString;
+}
+
+- (NSArray *)tokenField:(NSTokenField *)_tokenField shouldAddObjects:(NSArray *)_tokens atIndex:(NSUInteger)_index
+{
+	NSArray *result = [super tokenField:_tokenField shouldAddObjects:_tokens atIndex:_index];
+	NSMutableArray *newResult = [NSMutableArray arrayWithCapacity:[result count]];
+	for (NSString *token in result) {
+		if ([token hasPrefix:@"%["] && [token hasSuffix:@"]"] && _tokenField != snippetTokenField) {
+			token = [token substringWithRange:NSMakeRange(2, [token length] - 3)];
+		}
+		[newResult addObject:token];
+	}
+	return newResult;
+}
+
+- (NSTokenStyle)tokenField:(NSTokenField *)_tokenField styleForRepresentedObject:(id)_representedObject
+{
+	NSTokenStyle style = [super tokenField:_tokenField styleForRepresentedObject:_representedObject];
+	if (_tokenField == snippetTokenField &&
+        style == NSPlainTextTokenStyle &&
+		[_representedObject hasPrefix:@"%["] &&
+		[_representedObject hasSuffix:@"]"]) {
+		style = NSRoundedTokenStyle;
+	}
+	return style;
+}
+
+- (NSString *)tokenField:(NSTokenField *)_tokenField displayStringForRepresentedObject:(id)_representedObject
+{
+	NSString *result = [super tokenField:_tokenField displayStringForRepresentedObject:_representedObject];
+	if ([result isEqualToString:_representedObject] &&
+		[_representedObject hasPrefix:@"%["] &&
+		[_representedObject hasSuffix:@"]"]) {
+        result = [_representedObject substringWithRange:NSMakeRange(2, [_representedObject length] - 3)];
+	}
+	return result;
 }
 
 @end
