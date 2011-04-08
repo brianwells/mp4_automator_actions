@@ -1,25 +1,25 @@
-MP4 Automator Actions v1.0
+MP4 Automator Actions 2011-04-08
 
 MP4 Automator Actions is a collection of Automator actions for 
 processing MPEG-4 files which conform to the ISO 14496 standard. 
 
-- Add MPEG-4 Metadata Tags
+- Add MPEG-4 Metadata Tags v1.0
 
 Fills in metadata for the specified MPEG-4 files. Variables provided 
 for adding an index or total to any text field.
 
-- Edit MPEG-4 Metadata Tags
+- Edit MPEG-4 Metadata Tags v1.1
 
 Presents a window for the user to edit metadata for the specified 
 MPEG-4 files.
 
-- Enable MPEG-4 Chapter Text Track
+- Enable MPEG-4 Chapter Text Track v1.0
 
 Enables any existing chapter text track in the specified MPEG-4 files. 
 Also converts chapter text tracks to the selected format, which could 
 be the QuickTime and/or Nero formats.
 
-- Optimize MPEG-4 Files
+- Optimize MPEG-4 Files v1.0
 
 Rewrites the specified MPEG-4 files by moving the track samples to 
 the end of the file and interleaving them as appropriate. This also 
