@@ -1,12 +1,13 @@
-MP4 Automator Actions 2011-04-08
+MP4 Automator Actions 2011-12-08
 
 MP4 Automator Actions is a collection of Automator actions for 
 processing MPEG-4 files which conform to the ISO 14496 standard. 
 
-- Add MPEG-4 Metadata Tags v1.0
+- Add MPEG-4 Metadata Tags v1.1
 
 Fills in metadata for the specified MPEG-4 files. Variables provided 
-for adding an index or total to any text field.
+for adding an index or total to any text field. File URLs provided as 
+input may contain encoded metadata (see Encoding Metadata in File URLs).
 
 - Edit MPEG-4 Metadata Tags v1.1
 
@@ -34,6 +35,38 @@ You can contact the author by email at <spam_brian@me.com> or you can
 view the GitHub repository for MP4 Automator Actions.
 
 <https://github.com/brianwells/mp4_automator_actions>
+
+
+Encoding Metadata in File URLs
+
+Some automator actions support encoding metadata as name/value pairs 
+in the URL query string. This metadata will override any values 
+input through the action's user interface. Reserved characters in a
+supplied value must be percent-encoded (see RFC 3986). Valid metadata
+tag names are:
+
+tagName, tagArtist, tagAlbumArtist, tagAlbum, tagGrouping, tagComposer,
+tagDescription, tagLongDescription, tagReleaseDate, tagTVShow,
+tagTVNetwork, tagTVEpisodeID, tagSortName, tagSortArtist,
+tagSortAlbumArtist, tagSortAlbum, tagSortComposer, tagSortTVShow,
+tagCopyright, tagEncodingTool, tagEncodedBy, tagPurchaseDate,
+tagKeywords, tagCategory, tagLyrics, tagComments, tagTempo,
+tagTVEpisodeNumber, tagTVSeasonNumber, tagCompilation, tagHDVideo,
+tagGaplessPlayback, tagGenre, tagContentRating, tagMediaType,
+tagTrackNumber, tagTrackTotal, tagDiscNumber, tagDiscTotal, tagArtwork
+
+tagGenre can be a number indicating any of the defined iTunes or ID3v1
+genres and a string can be used to indicate a custom genre.
+
+tagContentType must be a number: 0 - None; 2 - Clean; 4 - Explicit
+
+tagMediaType is a number or string indicating the media type: 0 - None;
+1 - Music; 2 - Audiobook; "pcst" - Podcast; "itnu" - iTunes U;
+6 - Music Video; 9 - Movie; 10 - TV Show; 11 - Booklet; 14 - Ringtone
+
+tagArtwork should be a file URL for a BMP, JPEG, GIF, or PNG image that
+is suitable for inserting as artwork. This must be percent-encoded
+(see RFC 3986).
 
 
 MP4 Automator Actions
