@@ -440,6 +440,23 @@ static NSString * expandMacros(NSString *value, NSUInteger count, NSUInteger tot
 	return result;
 }
 
+// Retrieves querystring parameters and parses them as metadata tag information.
+- (NSDictionary *)parseQueryString:(NSString *)query
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:6];
+	NSArray *pairs = [query componentsSeparatedByString:@"&"];
+
+	for (NSString *pair in pairs) {
+		NSArray *elements = [pair componentsSeparatedByString:@"="];
+		if ([elements count] == 2) {
+			NSString *key = [[elements objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *val = [[elements objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			[dict setObject:val forKey:key];
+		}
+	}
+	return dict;
+}
+
 - (id)runWithInput:(id)input fromAction:(AMAction *)anAction error:(NSDictionary **)errorInfo
 {
     // set up for GCD
@@ -471,11 +488,29 @@ static NSString * expandMacros(NSString *value, NSUInteger count, NSUInteger tot
 			NSMutableSet *tagsToClear = [NSMutableSet setWithCapacity:2];
 			NSMutableDictionary *tagsToSet = [NSMutableDictionary dictionaryWithCapacity:2];
 
+			// extract the variables from the query string
+			NSDictionary* variables = [self parseQueryString:[srcURL query]];
+
             srcFile = MP4Modify([[srcURL path] UTF8String], 0, 0);
             if (srcFile == MP4_INVALID_FILE_HANDLE) {
                 // report error
                 error = [NSError errorWithDomain:[[self bundle] bundleIdentifier] code:1 userInfo:nil];
             } else {
+
+				// override any input by the variables specified in the query string
+				NSMutableArray* artWorkArray = [NSMutableArray arrayWithCapacity:1];
+				for (NSString *key in variables) {
+					NSString *value = [variables objectForKey:key];
+					if ([key isEqualToString:@"tagArtwork"]) {
+						[artWorkArray addObject:[value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+					} else {
+						[self.parameters setObject:value forKey:key];
+					}
+				}
+				if ([artWorkArray count] > 0) {
+					[self.parameters setObject:artWorkArray forKey:@"tagArtwork"];
+				}
+
 				tags = MP4TagsAlloc();
 				MP4TagsFetch(tags, srcFile);
 				
@@ -667,7 +702,10 @@ static NSString * expandMacros(NSString *value, NSUInteger count, NSUInteger tot
             if (error == nil) {
                 // successful
                 dispatch_sync(dispatch_get_main_queue(), ^{
-                    [returnArray addObject:srcURL];
+                    // return new URL with only the file path from the srcURL
+                    NSURL *dstURL = [[NSURL alloc] initWithScheme:@"file" host:@"" path:[srcURL path]];
+                    [returnArray addObject:dstURL];
+                    [dstURL release];
                 });
             } else {
                 // report error
